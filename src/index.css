@@ -1,0 +1,87 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: dark;
+}
+
+html, body, #root {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  background: #070809;
+  color: #E5E7EB;
+  font-family: 'Inter', system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  overflow: hidden;
+}
+
+@layer components {
+  .glass {
+    background: rgba(13, 15, 17, 0.72);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(45, 212, 191, 0.12);
+  }
+  .glass-soft {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.07);
+  }
+  .label-eyebrow {
+    @apply text-[10px] font-semibold uppercase tracking-[0.22em] text-vital-400/80;
+  }
+  .panel-title {
+    @apply font-display text-sm font-semibold text-gray-100;
+  }
+}
+
+@layer utilities {
+  .text-gradient-vital {
+    background: linear-gradient(135deg, #5EE9CF 0%, #2DD4BF 45%, #38BDF8 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .glow-vital {
+    box-shadow: 0 0 0 1px rgba(45, 212, 191, 0.2), 0 0 28px -6px rgba(45, 212, 191, 0.35);
+  }
+}
+
+/* Custom range sliders */
+input[type='range'] {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 4px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.1);
+  outline: none;
+}
+input[type='range']::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  background: #2DD4BF;
+  cursor: pointer;
+  box-shadow: 0 0 10px -1px rgba(45, 212, 191, 0.7);
+  border: 2px solid #0D0F11;
+}
+
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(45, 212, 191, 0.25); border-radius: 999px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(45, 212, 191, 0.45); }
+
+/* Thin select styling */
+select {
+  background-color: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.1);
+  color: #E5E7EB;
+}
+select option { background: #0D0F11; }
