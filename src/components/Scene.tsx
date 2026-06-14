@@ -101,19 +101,21 @@ export default function Scene(props: Props) {
 
       <Stars radius={60} depth={40} count={1400} factor={3} saturation={0} fade speed={0.6} />
 
-      <Suspense fallback={<Html center><span className="text-vital-400 text-xs">loading cohort…</span></Html>}>
+      {/* Axis labels use drei <Text>, which loads a font asynchronously.
+          Keep it in its own non-blocking boundary so the cohort renders instantly. */}
+      <Suspense fallback={null}>
         <AxesFrame posMode={posMode} axes={axes} />
-        <PatientCloud
-          colorMode={colorMode}
-          posMode={posMode}
-          axes={axes}
-          k={k}
-          hovered={hovered}
-          setHovered={setHovered}
-        />
-        {showUser && <UserMarker input={input} risk={userRisk} posMode={posMode} axes={axes} />}
-        {hovered !== null && <HoverTooltip index={hovered} posMode={posMode} axes={axes} />}
       </Suspense>
+      <PatientCloud
+        colorMode={colorMode}
+        posMode={posMode}
+        axes={axes}
+        k={k}
+        hovered={hovered}
+        setHovered={setHovered}
+      />
+      {showUser && <UserMarker input={input} risk={userRisk} posMode={posMode} axes={axes} />}
+      {hovered !== null && <HoverTooltip index={hovered} posMode={posMode} axes={axes} />}
 
       <OrbitControls
         enablePan={false}

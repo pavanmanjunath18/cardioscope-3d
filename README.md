@@ -4,6 +4,10 @@ An interactive **3D data-analytics application** that turns a real clinical data
 
 Built to demonstrate the full data-science loop — **ingestion → dimensionality reduction → unsupervised clustering → a predictive model → a real-time, explainable interface** — not just a chart.
 
+**▶ Live demo: [cardioscope-3d.vercel.app](https://cardioscope-3d.vercel.app)**
+
+![CardioScope 3D — the 297-patient cohort in PCA space with the cardiac risk simulator](docs/preview.png)
+
 ---
 
 ## What it does
