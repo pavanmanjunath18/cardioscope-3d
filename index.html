@@ -3,12 +3,29 @@
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="CardioScope 3D — interactive cardiovascular risk stratification on the UCI Heart Disease cohort. PCA, k-means, and a logistic-regression risk model rendered in real-time 3D." />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="theme-color" content="#070809" />
     <title>CardioScope 3D · Cardiovascular Risk Explorer</title>
+    <meta name="description" content="CardioScope 3D — interactive cardiovascular risk stratification on the UCI Heart Disease cohort. PCA, k-means, and a cross-validated logistic-regression risk model rendered in real-time 3D." />
+
+    <!-- Social previews -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://cardioscope-3d.vercel.app/" />
+    <meta property="og:title" content="CardioScope 3D · Cardiovascular Risk Explorer" />
+    <meta property="og:description" content="Explore 297 real cardiology patients in 3D — PCA, k-means and an explainable risk model you can simulate yourself." />
+    <meta property="og:image" content="https://cardioscope-3d.vercel.app/og-image.png" />
+    <meta property="og:image:width" content="1440" />
+    <meta property="og:image:height" content="900" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="CardioScope 3D · Cardiovascular Risk Explorer" />
+    <meta name="twitter:description" content="Explore 297 real cardiology patients in 3D with an explainable, cross-validated risk model." />
+    <meta name="twitter:image" content="https://cardioscope-3d.vercel.app/og-image.png" />
   </head>
   <body>
     <div id="root"></div>
+    <noscript>
+      <p style="padding:24px;font-family:system-ui;color:#E5E7EB">CardioScope 3D needs JavaScript and WebGL to run.</p>
+    </noscript>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
