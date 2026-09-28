@@ -1,8 +1,8 @@
 import { useMemo, useRef } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
-import { EffectComposer, Bloom } from '@react-three/postprocessing';
 import * as THREE from 'three';
 import { riskColor } from '../lib/analytics';
+import { useInView } from '../lib/hooks';
 
 function heartGeometry() {
   const s = new THREE.Shape();
@@ -34,7 +34,7 @@ function lubDub(phase: number) {
   return lub + dub;
 }
 
-function HeartMesh({ risk }: { risk: number }) {
+function HeartMesh({ risk, still }: { risk: number; still: boolean }) {
   const geo = useMemo(() => heartGeometry(), []);
   const mesh = useRef<THREE.Mesh>(null);
   const phase = useRef(0);
@@ -44,6 +44,7 @@ function HeartMesh({ risk }: { risk: number }) {
   const bpm = 64 + risk * 48;
 
   useFrame((_, dt) => {
+    if (still) return;
     phase.current = (phase.current + (bpm / 60) * dt) % 1;
     const b = lubDub(phase.current);
     const amp = 0.10 + risk * 0.07; // higher risk beats harder
@@ -70,16 +71,27 @@ function HeartMesh({ risk }: { risk: number }) {
   );
 }
 
-export default function Heart({ risk }: { risk: number }) {
+/**
+ * Beating heart, rendered in its own small canvas. It has no postprocessing pass
+ * (emissive material only), stops rendering while scrolled off screen, and holds
+ * still for users who prefer reduced motion.
+ */
+export default function Heart({ risk, reducedMotion }: { risk: number; reducedMotion: boolean }) {
+  const wrap = useRef<HTMLDivElement>(null);
+  const inView = useInView(wrap);
   return (
-    <Canvas camera={{ position: [0, 0, 5.4], fov: 42 }} dpr={[1, 2]} gl={{ antialias: true, alpha: true }}>
-      <ambientLight intensity={0.7} />
-      <pointLight position={[3, 4, 5]} intensity={1.3} />
-      <pointLight position={[-4, -2, 2]} intensity={0.5} color="#5EEAD4" />
-      <HeartMesh risk={risk} />
-      <EffectComposer>
-        <Bloom luminanceThreshold={0.3} luminanceSmoothing={0.9} intensity={0.7} mipmapBlur />
-      </EffectComposer>
-    </Canvas>
+    <div ref={wrap} className="h-full w-full" aria-hidden="true">
+      <Canvas
+        camera={{ position: [0, 0, 5.4], fov: 42 }}
+        dpr={[1, 2]}
+        gl={{ antialias: true, alpha: true }}
+        frameloop={inView && !reducedMotion ? 'always' : 'demand'}
+      >
+        <ambientLight intensity={0.7} />
+        <pointLight position={[3, 4, 5]} intensity={1.3} />
+        <pointLight position={[-4, -2, 2]} intensity={0.5} color="#5EEAD4" />
+        <HeartMesh risk={risk} still={reducedMotion} />
+      </Canvas>
+    </div>
   );
 }

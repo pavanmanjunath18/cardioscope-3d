@@ -1,4 +1,4 @@
-import type { Feature } from './patients';
+import { patients, type Feature } from './patients';
 
 export interface FeatureMeta {
   key: Feature;
@@ -14,7 +14,7 @@ export interface FeatureMeta {
   options?: { value: number; label: string }[]; // for categorical
 }
 
-export const FEATURE_META: Record<Feature, FeatureMeta> = {
+const META: Record<Feature, FeatureMeta> = {
   age: {
     key: 'age', label: 'Age', name: 'Age', unit: 'yrs',
     desc: 'Patient age in years.',
@@ -65,7 +65,7 @@ export const FEATURE_META: Record<Feature, FeatureMeta> = {
   },
   thalach: {
     key: 'thalach', label: 'Max HR', name: 'Max heart rate achieved', unit: 'bpm',
-    desc: 'Maximum heart rate during exercise testing. Lower peaks are protective-failing — strong inverse risk signal.',
+    desc: 'Maximum heart rate reached during exercise testing. A lower peak signals poorer exercise tolerance — a strong risk signal.',
     kind: 'numeric', min: 70, max: 205, step: 1, default: 150,
   },
   exang: {
@@ -111,3 +111,14 @@ export const FEATURE_META: Record<Feature, FeatureMeta> = {
     ],
   },
 };
+
+// Numeric sliders span the full cohort range, so any real patient (e.g. from
+// "load random patient") can be represented exactly.
+for (const m of Object.values(META)) {
+  if (m.kind !== 'numeric') continue;
+  const vals = patients.map((p) => p[m.key]);
+  m.min = Math.min(m.min, ...vals);
+  m.max = Math.max(m.max, ...vals);
+}
+
+export const FEATURE_META = META;

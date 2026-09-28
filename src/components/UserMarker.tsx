@@ -1,19 +1,25 @@
-import { useRef } from 'react';
+import { useRef, type RefObject } from 'react';
 import { useFrame } from '@react-three/fiber';
 import { Html } from '@react-three/drei';
 import * as THREE from 'three';
-import { pcaProjectInput, axisPosition, riskColor, type Vec3 } from '../lib/analytics';
+import { pcaProjectInput, axisPosition, riskColor, type Input, type Vec3 } from '../lib/analytics';
 import type { PosMode, Axes } from '../types';
-import type { Feature } from '../data/patients';
 
 interface Props {
-  input: Record<Feature, number>;
+  input: Input;
   risk: number;
   posMode: PosMode;
   axes: Axes;
+  /** Receives the marker's live position (for neighbour links). */
+  livePosRef: RefObject<THREE.Vector3>;
+  reducedMotion: boolean;
+  /** DOM container for the label overlay. */
+  portal: RefObject<HTMLDivElement | null>;
 }
 
-export default function UserMarker({ input, risk, posMode, axes }: Props) {
+const tv = new THREE.Vector3();
+
+export default function UserMarker({ input, risk, posMode, axes, livePosRef, reducedMotion, portal }: Props) {
   const groupRef = useRef<THREE.Group>(null);
   const ringRef = useRef<THREE.Mesh>(null);
   const coreRef = useRef<THREE.Mesh>(null);
@@ -28,10 +34,11 @@ export default function UserMarker({ input, risk, posMode, axes }: Props) {
   useFrame((state) => {
     const g = groupRef.current;
     if (!g) return;
-    g.position.lerp(_tv.set(target[0], target[1], target[2]), 0.1);
+    g.position.lerp(tv.set(target[0], target[1], target[2]), reducedMotion ? 1 : 0.1);
+    livePosRef.current.copy(g.position);
+    if (reducedMotion) return;
     const t = state.clock.elapsedTime;
-    const pulse = 1 + Math.sin(t * 3) * 0.12;
-    if (coreRef.current) coreRef.current.scale.setScalar(pulse);
+    if (coreRef.current) coreRef.current.scale.setScalar(1 + Math.sin(t * 3) * 0.12);
     if (ringRef.current) {
       ringRef.current.rotation.z = t * 1.2;
       const rp = (Math.sin(t * 2.4) + 1) / 2;
@@ -50,7 +57,7 @@ export default function UserMarker({ input, risk, posMode, axes }: Props) {
         <torusGeometry args={[0.42, 0.03, 12, 48]} />
         <meshBasicMaterial color={color} transparent opacity={0.5} toneMapped={false} />
       </mesh>
-      <Html center distanceFactor={14} position={[0, 0.7, 0]} pointerEvents="none">
+      <Html center position={[0, 0.55, 0]} pointerEvents="none" zIndexRange={[30, 0]} portal={portal as RefObject<HTMLElement>}>
         <div className="whitespace-nowrap rounded-full border border-white/20 bg-black/70 px-2 py-0.5 text-[10px] font-semibold tracking-wide text-white backdrop-blur">
           YOU · {(risk * 100).toFixed(0)}%
         </div>
@@ -58,5 +65,3 @@ export default function UserMarker({ input, risk, posMode, axes }: Props) {
     </group>
   );
 }
-
-const _tv = new THREE.Vector3();

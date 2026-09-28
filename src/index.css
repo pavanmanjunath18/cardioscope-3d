@@ -1,5 +1,3 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -28,15 +26,11 @@ body {
     -webkit-backdrop-filter: blur(16px);
     border: 1px solid rgba(45, 212, 191, 0.12);
   }
-  .glass-soft {
-    background: rgba(255, 255, 255, 0.03);
-    border: 1px solid rgba(255, 255, 255, 0.07);
-  }
   .label-eyebrow {
     @apply text-[10px] font-semibold uppercase tracking-[0.22em] text-vital-400/80;
   }
-  .panel-title {
-    @apply font-display text-sm font-semibold text-gray-100;
+  .risk-readout {
+    text-shadow: 0 0 2px rgba(0, 0, 0, 0.9), 0 1px 10px rgba(0, 0, 0, 0.85);
   }
 }
 
@@ -72,7 +66,26 @@ input[type='range']::-webkit-slider-thumb {
   box-shadow: 0 0 10px -1px rgba(45, 212, 191, 0.7);
   border: 2px solid #0D0F11;
 }
+input[type='range']::-moz-range-thumb {
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  background: #2DD4BF;
+  cursor: pointer;
+  box-shadow: 0 0 10px -1px rgba(45, 212, 191, 0.7);
+  border: 2px solid #0D0F11;
+}
+input[type='range']::-moz-range-track {
+  height: 4px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.1);
+}
+input[type='range']:focus-visible {
+  box-shadow: 0 0 0 3px rgba(45, 212, 191, 0.35);
+}
 
+/* Scrollbars: standard property for Firefox, pseudo-elements for WebKit */
+.rail { scrollbar-width: thin; scrollbar-color: rgba(45, 212, 191, 0.3) transparent; }
 ::-webkit-scrollbar { width: 8px; height: 8px; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: rgba(45, 212, 191, 0.25); border-radius: 999px; }
@@ -85,3 +98,16 @@ select {
   color: #E5E7EB;
 }
 select option { background: #0D0F11; }
+
+button:focus-visible,
+select:focus-visible {
+  outline: 2px solid rgba(45, 212, 191, 0.6);
+  outline-offset: 1px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
